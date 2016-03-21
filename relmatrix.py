@@ -53,3 +53,9 @@ def binary_coeff(x, y):
             return np.zeros(x.shape)
 
 
+def pearson_coeff(x):
+    return np.zeros(x.shape)
+
+
+def linreg_coeff(x):
+    return np.zeros(x.shape)
