@@ -27,7 +27,7 @@ def get_value(key, dictionary):
 def get_period(dt):
     h = dt.hour
     if h > 5:
-        if h < 12:    #5-11
+        if h < 12:    #6-11
             return 1
         elif h < 20:  #12-19
             return 2
@@ -57,8 +57,14 @@ for user in db[u'users'].find():
 
 user_email = u'andrej.lazarev@gmail.com'
 
+user_email = u'ktrn0509@gmail.com'
+
+
 for data in db[u'data'].find({u'email':user_email}):
     if u'entryType' in data.keys():
+        if data[u'entryType'] == 'sleep':
+            print (data)
+
         if data[u'entryType'] == 'rrData':
             if 'statistics' in data.keys():
                 stats = data[u'statistics']
@@ -89,7 +95,7 @@ for data in db[u'data'].find({u'email':user_email}):
                 add_values(users[uid]['data'], date, period, l)
 
 
-for data in db[u'data'].find({u'email':user_email}):
+for data in db[u'data'].find():
     if u'entryType' in data.keys():
         if data[u'entryType'] == 'geo':      # NOTE THAT IF DAY IS NOT IN DICT NO LOCATION WILL BE ADDED
             if not data[u'timeEnd'].year > datetime.now().year:
@@ -129,7 +135,6 @@ for data in db[u'data'].find({u'email':user_email}):
         elif data[u'entryType'] == 'weather':
             tags = [u'lunarPhase', u'weather', u'main', u'wind', u'clouds']
             if len([tag for tag in tags if tag not in data.keys()]) == 0:
-                print ('yes')
                 lunar = data[u'lunarPhase']
                 weather = data[u'weather']
                 main = data[u'main']
@@ -159,12 +164,15 @@ for data in db[u'data'].find({u'email':user_email}):
                     users[uid]['data'][date][period][min_index] = merge_two_dicts(l, users[uid]['data'][date][period][min_index])
 
 
-
-
-        elif data[u'entryType'] == 'weight':
-            # print (data[u'entryType'])
-            # print (data[u'timeStart'], data[u'value'])
-            pass
+for data in db[u'data'].find({u'entryType':'weight'}):
+    if data[u'entryType'] == 'weight':
+        date = data['timeStart'].strftime('%Y-%m-%d')
+        weight = data['value']
+        users[uid]['data'][date] = {}
+        break
+        # print (data[u'entryType'])
+        # print (data[u'timeStart'], data[u'value'])
+        pass
 
         elif data[u'entryType'] == 'height':
             # print (data[u'entryType'])
@@ -253,4 +261,6 @@ for data in db[u'data'].find({u'email':user_email}):
             # print (data[u'entryType'])
             # print (data[u'timeStart'], data[u'value'])
             pass
+
+
 
